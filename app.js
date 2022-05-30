@@ -40,6 +40,7 @@ const game = {
   },
   initializeGame: function() {
       while(true) {
+        // assign this.smallestNumber a valid integer from user input
         this.smallestNum = prompt("Enter the smallest number.");
         while(true) {
           this.smallestNum = parseInt(this.smallestNum);
@@ -48,6 +49,7 @@ const game = {
           }
           this.smallestNum = prompt("Enter a valid smallest number.");
         }
+        // assign this.biggestNumber a valid integer from user input
         this.biggestNum = prompt("Enter the biggest number.");
         while(true) {
           this.biggestNum = parseInt(this.biggestNum);
@@ -57,18 +59,15 @@ const game = {
           this.biggestNum = prompt("Enter a valid biggest number.");
         }
 
-        console.log(this.smallestNum);
-        console.log(this.biggestNum);
-
         if (this.smallestNum < this.biggestNum) {
           break;
         }
         else {
-          alert(`Invalid range. The smallest number cannot be larger than the 
-                 biggest number. Please enter numbers for a valid range.`);
+          alert(`Invalid range. The smallest number cannot be larger than the biggest number. Please enter numbers for a valid range.`);
         }
       }
 
+      // Get a random secret number from the range
       this.secretNum = Math.floor(Math.random() * 
       (this.biggestNum - this.smallestNum + 1)) + this.smallestNum;
   },
