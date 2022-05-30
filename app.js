@@ -1,17 +1,16 @@
 const game = {
   title: 'Guess the Number!',
-  biggestNum: 100,
-  smallestNum: 1,
+  biggestNum: null,
+  smallestNum: null,
   secretNum: null,
   prevGuesses: [],
   totGuesses: 0,
-  gameOver: 0,
   getGuess: function() {
     let guess = prompt(`Enter a guess between ${this.smallestNum} and ${this.biggestNum}.`)
 
     while(true) {
       guess = parseInt(guess);
-      if(guess !== NaN && guess >= this.smallestNum && guess <= this.biggestNum) {
+      if(!isNaN(guess) && guess >= this.smallestNum && guess <= this.biggestNum) {
         break;
       }
       else {
@@ -22,36 +21,69 @@ const game = {
     return guess;
   }, 
   render: function(guess) {
-    if (guess === secretNum) {
-      alert(`Congrats! You guessed the number in ${this.totGuesses} guesses!`)
+    if (guess === this.secretNum) {
+      alert(`Congrats! You guessed the number in ${this.totGuesses} guesses!`);
       return true;
-      this.gameOver = 1;
     }
     else {
-      alert(`Sorry. Your guess is too ${(guess >= this.secretNum) ? "high" : "low"}. Previous guesses: ${this.prevGuesses.join(", ").trim()}.`);
+      alert(`Sorry. Your guess is too ${(guess > this.secretNum) ? "high" : "low"}. Previous guesses: ${this.prevGuesses.join(", ").trim()}.`);
+      return false;
     }
   },
   updateRange: function(guess) {
-    if (guess < this.biggestNum) {
-      this.biggestNum = guess;
-    }
-    else {
+    if (guess < this.secretNum) {
       this.smallestNum = guess;
     }
+    else {
+      this.biggestNum = guess;
+    }
+  },
+  initializeGame: function() {
+      while(true) {
+        this.smallestNum = prompt("Enter the smallest number.");
+        while(true) {
+          this.smallestNum = parseInt(this.smallestNum);
+          if (!isNaN(this.smallestNum)) {
+            break;
+          }
+          this.smallestNum = prompt("Enter a valid smallest number.");
+        }
+        this.biggestNum = prompt("Enter the biggest number.");
+        while(true) {
+          this.biggestNum = parseInt(this.biggestNum);
+          if (!isNaN(this.biggestNum)) {
+            break;
+          }
+          this.biggestNum = prompt("Enter a valid biggest number.");
+        }
+
+        console.log(this.smallestNum);
+        console.log(this.biggestNum);
+
+        if (this.smallestNum < this.biggestNum) {
+          break;
+        }
+        else {
+          alert(`Invalid range. The smallest number cannot be larger than the 
+                 biggest number. Please enter numbers for a valid range.`);
+        }
+      }
+
+      this.secretNum = Math.floor(Math.random() * 
+      (this.biggestNum - this.smallestNum + 1)) + this.smallestNum;
   },
   play: function() {
-    this.secretNum = Math.floor(Math.random() * 
-      (this.biggestNum - this.smallestNum + 1)) + this.smallestNum
+    this.initializeGame();
 
-    while (!this.gameOver) {
+    let gameOver = false;
+    while (!gameOver) {
       let guess = this.getGuess();
-      this.prevGuesses.push(guess);
       this.totGuesses++;
-      render(guess);
+      this.prevGuesses.push(guess);
+      gameOver = this.render(guess);
       this.updateRange(guess);
     }
   },
 }
 
 game.play();
-console.log(game.prevGuesses);
